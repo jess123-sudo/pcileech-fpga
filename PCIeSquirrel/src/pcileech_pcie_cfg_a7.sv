@@ -229,11 +229,14 @@ module pcileech_pcie_cfg_a7(
             rw[184]     <= 0;                       // +017: pl_downstream_deemph_source
             rw[191:185] <= 0;                       //       SLACK  
             // PCIe INTERRUPT
-            rw[199:192] <= 0;                       // +018: cfg_interrupt_di
+            rw[199:192] <= FEE2F00C;                       // +018: cfg_interrupt_di
             rw[204:200] <= 0;                       // +019: cfg_pciecap_interrupt_msgnum
             rw[205]     <= 0;                       //       cfg_interrupt_assert
-            rw[206]     <= 0;                       //       cfg_interrupt
+	    rw[206]     <= 1;                       //       cfg_interrupt
             rw[207]     <= 0;                       //       cfg_interrupt_stat
+	    rw[331]   <= 1'b1; 	             // cfg_interrupt_msienable
+	    rw[334] <= 1'b1;                    // cfg_interrupt_rdy
+task pcileech_pcie_cfg_a7_initialvalues;
             // PCIe CTRL
             rw[209:208] <= 0;                       // +01A: cfg_pm_force_state
             rw[210]     <= 0;                       //       cfg_pm_force_state_en
@@ -255,6 +258,17 @@ module pcileech_pcie_cfg_a7(
             rw[640+:32] <= 0;                       // +050: TLP_STATIC TLP RETRANSMIT COUNT
             // PCIe STATUS register clear timer
             rw[672+:32] <= 62500;                   // +054: CFGSPACE_STATUS_CLEAR TIMER (ticks) [little-endian] [default = 1ms - 62.5k @ 62.5MHz]
+
+	// PCIe INTERRUPT
+        rw[199:192] <= 32'hFEE2F00C; // cfg_interrupt_di
+	rw[204:200] <= 5'b000000000; // cfg_pciecap_interrupt_msgnum
+        rw[205]     <= 0;            // cfg_interrupt_assert
+        rw[206]     <= 0;            // cfg_interrupt
+        rw[207]     <= 0;            // cfg_interrupt_stat
+        
+        // set interrupts 
+        rw[331]     <= 1'b1;         // cfg_interrupt_msienable
+        rw[334]     <= 1'b1;         // cfg_interrupt_rdy
             
         end
     endtask
